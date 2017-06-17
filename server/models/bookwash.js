@@ -56,7 +56,10 @@ var BookWashSchema = new mongoose.Schema({
     },
     status:{
         type:String,
-        default:'Pending'
+        default:"Pending"
+    },
+    code:{
+        type:String
     }
 });
 
