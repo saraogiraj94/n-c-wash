@@ -7,11 +7,11 @@ var SubAreaSchema = new mongoose.Schema({
         required:true
 
     },
-    subarea_days:[{
-        service_day:{
-            type:String
-        }
-    }]
+    superarea_name:{
+        type:String,
+        required:true
+    },
+    subarea_days:[String]
 });
 
 

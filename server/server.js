@@ -1,12 +1,14 @@
 var express = require('express');
 var bodyParser = require('body-parser');
 var _ = require('lodash');
+var moment=require('moment');
+require('datejs');
 
 var { mongoose } = require('./db/mongoose');
 var { Refferal } = require('./models/refferal');
 var { BookWash } = require('./models/bookwash');
 var { InstantService } = require('./models/instantservice');
-
+var {SubArea}=require('./models/subarea');
 
 const port = process.env.PORT || 3000;
 
@@ -263,7 +265,53 @@ app.get('/webhook/', function (req, res) {
 		res.send(req.query['hub.challenge'])
 	}
 	res.send('Error, wrong token')
-})
+});
+
+
+//Admin Add SubAreas with days at which service is offered
+app.post('/admin/subarea/add',(req,res)=>{
+    var newSubArea=new SubArea(req.body);
+    console.log("Sub Area is",newSubArea);
+    newSubArea.save().then((subArea)=>{
+        return res.send({
+            message: "Success",
+            subArea
+        });
+    },(err)=>{
+        res.status(400).send({
+            message: "Failure",
+            err
+        });
+    });
+});
+
+//User Get Package Availabilty DATES after submitting subarea
+app.post('/user/subarea/getdates',(req,res)=>{
+    var subarea_name=req.body.subarea_name;
+    SubArea.findOne({'subarea_name':subarea_name}).then((subArea)=>{
+       // console.log("Find the subarea object",subArea);
+        var dates=[];
+        for(var i=0;i<subArea.subarea_days.length;i++){
+            var par=`next ${subArea.subarea_days[i]}`;
+            var date=Date.parse(par);
+            date=moment(date).format("DD MMM YYYY");
+            console.log("Date of the day is "+date);
+            dates.push(date);
+        }
+        dates=_.sortBy(dates);
+        return res.send({
+            message: "Success",
+            dates
+        });
+    },(err)=>{
+            res.status(400).send({
+            message: "Failure",
+            reason:"No Such Sub Area",
+            err
+        });
+    }); 
+}); 
+
 
 app.listen(port, () => {
     console.log(`Started up at port ${port}`);

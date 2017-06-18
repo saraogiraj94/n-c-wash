@@ -11,8 +11,10 @@
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.17.2",
+    "datejs": "^1.0.0-rc3",
     "express": "^4.15.3",
     "lodash": "^4.17.4",
+    "moment": "^2.18.1",
     "mongoose": "^4.10.4"
   }
 }
