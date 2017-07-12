@@ -478,6 +478,10 @@ app.post('/user/getdatelist',(req,res)=>{
     now=moment.tz(now,"Asia/Kolkata").format();
     console.log("now is" +now);
     var nowob=new Date(now);
+
+    //Adding 5.30 hours as it converts to utc and decreases in live server but works fine in local
+    nowob=date.addMinutes(nowob,330);
+
     console.log("now ob is"+nowob);
     var formatdate=date.format(nowob,"DD-MM-YYYY");
     console.log("format"+formatdate);
@@ -522,10 +526,6 @@ app.post('/user/gettimeslots',(req,res)=>{
     var schedule_date=req.body.schedule_date;
     var usersubarea=req.body.subarea;
 
-    //Schedule date is going one day ahead after formating so reduce one day
-    
-
-
     //Convert this date into day and find it in the areas schema
     var schedule_day=moment(schedule_date).format("dddd");
     schedule_day=schedule_day.toLocaleLowerCase();
@@ -553,6 +553,7 @@ app.post('/user/gettimeslots',(req,res)=>{
      }
     console.log("SLots",JSON.stringify(slots,undefined,2));
     //After getting slots for those are we need to check bookingledger for time availability
+    
     return res.send({
         message:"Success",
         slots
