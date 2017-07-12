@@ -553,7 +553,10 @@ app.post('/user/gettimeslots',(req,res)=>{
      }
     console.log("SLots",JSON.stringify(slots,undefined,2));
     //After getting slots for those are we need to check bookingledger for time availability
-    
+    return res.send({
+        message:"Success",
+        slots
+    })
 
     },(err)=>{
         console.log(err);
